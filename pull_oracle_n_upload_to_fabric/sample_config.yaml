@@ -1,0 +1,43 @@
+# Main configuration file for Oracle to Fabric script
+
+# Oracle client settings for Thick Mode
+oracle_settings:
+  # Path to Oracle Instant Client libraries.
+  # Set to null or omit if ORACLE_CLIENT_LIB_DIR environment variable is used,
+  # or if Instant Client is in the system's default library search path.
+  # Example Linux: "/opt/oracle/instantclient_21_12"
+  # Example Windows: "C:\\oracle\\instantclient_21_12"
+  thick_mode_lib_dir: null 
+
+# Settings related to data processing from Oracle and local Parquet generation
+processing_settings:
+  # Base folder where Parquet files will be saved locally before upload.
+  base_local_output_directory: "parquet_output_local" 
+  
+  # List of tables to process from Oracle. Each item is an object defining table-specific details.
+  tables_to_process:
+    - oracle_table_name: "SCHEMA_NAME.TABLE_NAME_1" # Fully qualified Oracle table name (SCHEMA.TABLE)
+      local_file_name: "table1_data.parquet"         # Desired local Parquet file name
+      lakehouse_dest_folder_path: "OracleData/Table1" # Destination folder in Lakehouse Files (relative to "Files/" root)
+      lakehouse_dest_file_name: "table1_final.parquet" # Desired file name in Lakehouse
+    
+    - oracle_table_name: "SCHEMA_NAME.TABLE_NAME_2"
+      local_file_name: "table2_data.parquet"
+      lakehouse_dest_folder_path: "OracleData/Table2"
+      lakehouse_dest_file_name: "table2_final.parquet"
+      
+    # Add more tables here following the same structure:
+    # - oracle_table_name: "SCHEMA.ANOTHERTABLE"
+    #   local_file_name: "anothertable.parquet"
+    #   lakehouse_dest_folder_path: "OracleData/Other"
+    #   lakehouse_dest_file_name: "anothertable_final.parquet"
+      
+  # Default precision and scale for casting Oracle NUMBER types during Parquet conversion.
+  cast_number_to_precision: 22 
+  cast_number_to_scale: 0 
+
+# Settings for Microsoft Fabric Lakehouse uploads
+# Credentials (tenant_id, client_id, client_secret) should be in your .env file.
+fabric_lakehouse_settings:
+  workspace_id: "YOUR_FABRIC_WORKSPACE_ID_HERE" # Replace with your actual Fabric Workspace ID
+  lakehouse_id: "YOUR_FABRIC_LAKEHOUSE_ID_HERE" # Replace with your actual Fabric Lakehouse ID
